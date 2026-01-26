@@ -1,0 +1,121 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+.app {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+}
+
+.time-selector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  padding: 60px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 30px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.time-selector h1 {
+  font-size: 64px;
+  font-weight: bold;
+  color: white;
+  text-shadow: 0 4px 20px rgba(102, 126, 234, 0.5);
+  letter-spacing: 2px;
+}
+
+.button-group {
+  display: flex;
+  gap: 30px;
+}
+
+.time-button {
+  padding: 30px 60px;
+  font-size: 48px;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+  min-width: 200px;
+}
+
+.time-button:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 35px rgba(102, 126, 234, 0.6);
+}
+
+.time-button:active {
+  transform: translateY(-2px);
+}
+
+.sound-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+  padding-top: 30px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sound-preview h3 {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: normal;
+}
+
+.preview-buttons {
+  display: flex;
+  gap: 15px;
+}
+
+.preview-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 70px;
+}
+
+.preview-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+.preview-button:active {
+  transform: translateY(0);
+}
+
+.preview-button.explosion {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+  border-color: rgba(255, 107, 107, 0.5);
+}
+
+.preview-button.explosion:hover {
+  background: linear-gradient(135deg, #ff8787 0%, #ff6b6b 100%);
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+}
