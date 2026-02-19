@@ -33,6 +33,19 @@ const Timer = ({ totalMinutes, onComplete, onReset }: TimerProps) => {
     return () => clearInterval(interval)
   }, [totalMinutes])
 
+  // ページタイトルに残り時間を表示
+  useEffect(() => {
+    const minutes = Math.floor(Math.abs(remainingSeconds) / 60)
+    const seconds = Math.abs(remainingSeconds) % 60
+    const sign = remainingSeconds < 0 ? '-' : ''
+    const timeText = `${sign}${minutes}:${seconds.toString().padStart(2, '0')}`
+    document.title = timeText
+
+    return () => {
+      document.title = 'lt_timer'
+    }
+  }, [remainingSeconds])
+
   // アラームチェック
   useEffect(() => {
     if (totalMinutes === 5) {
