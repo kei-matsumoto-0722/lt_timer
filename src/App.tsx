@@ -1,13 +1,15 @@
 import { useState } from 'react'
 import './App.css'
 import Timer from './components/Timer'
-import { play1MinAlarm, playTimeUpAlarm, playExplosion } from './utils/sounds'
+import { play1MinAlarm, playTimeUpAlarm, playExplosion, initAudioContext } from './utils/sounds'
 
 function App() {
   const [selectedTime, setSelectedTime] = useState<number | null>(null)
   const [isRunning, setIsRunning] = useState(false)
 
   const handleTimeSelect = (minutes: number) => {
+    // タイマー開始時にAudioContextを初期化
+    initAudioContext()
     setSelectedTime(minutes)
     setIsRunning(true)
   }

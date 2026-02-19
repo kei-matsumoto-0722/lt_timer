@@ -1,28 +1,47 @@
+// AudioContextをグローバルで管理（ブラウザのオートプレイポリシー対策）
+let audioContext: AudioContext | null = null
+
+const getAudioContext = () => {
+  if (!audioContext) {
+    audioContext = new AudioContext()
+  }
+  // サスペンド状態の場合は再開
+  if (audioContext.state === 'suspended') {
+    audioContext.resume()
+  }
+  return audioContext
+}
+
+// AudioContextを初期化（タイマー開始時に呼び出す）
+export const initAudioContext = () => {
+  getAudioContext()
+}
+
 // アラーム音を生成
 export const playAlarm = (frequency: number, duration: number, volume: number) => {
-  const audioContext = new AudioContext()
-  const oscillator = audioContext.createOscillator()
-  const gainNode = audioContext.createGain()
+  const ctx = getAudioContext()
+  const oscillator = ctx.createOscillator()
+  const gainNode = ctx.createGain()
 
   oscillator.connect(gainNode)
-  gainNode.connect(audioContext.destination)
+  gainNode.connect(ctx.destination)
 
   oscillator.frequency.value = frequency
   oscillator.type = 'sine'
 
-  gainNode.gain.setValueAtTime(volume, audioContext.currentTime)
+  gainNode.gain.setValueAtTime(volume, ctx.currentTime)
   gainNode.gain.exponentialRampToValueAtTime(
     0.01,
-    audioContext.currentTime + duration
+    ctx.currentTime + duration
   )
 
-  oscillator.start(audioContext.currentTime)
-  oscillator.stop(audioContext.currentTime + duration)
+  oscillator.start(ctx.currentTime)
+  oscillator.stop(ctx.currentTime + duration)
 }
 
 // ベートーベン「運命」冒頭風の音（ジャジャジャジャーン）- 重厚で絶望的
 export const playExplosion = () => {
-  const audioContext = new AudioContext()
+  const audioContext = getAudioContext()
   const currentTime = audioContext.currentTime
 
   // 「運命」の有名な冒頭モチーフ: ソソソ ミ♭ー（G G G Eb）
@@ -97,14 +116,14 @@ export const playExplosion = () => {
 
 // 1分前アラーム（1:00）ピンポーン
 export const play1MinAlarm = () => {
-  const audioContext = new AudioContext()
+  const audioContext = getAudioContext()
   const currentTime = audioContext.currentTime
 
   // ピンポーンの2音（高→低）
   // E5 → C5（ミ → ド）がよく使われる組み合わせ
   const chime = [
-    { time: 0.0, note: 659.25, duration: 0.8 },  // ピーン（E5）
-    { time: 0.3, note: 523.25, duration: 1.0 }   // ポーン（C5）
+    { time: 0.0, note: 659.25, duration: 0.4 },  // ピーン（E5）
+    { time: 0.15, note: 523.25, duration: 0.5 }   // ポーン（C5）
   ]
 
   chime.forEach((tone) => {
@@ -162,9 +181,9 @@ export const play1MinAlarm = () => {
   })
 }
 
-// 時間終了アラーム（0:00）ピピピピッ × 3回
+// 時間終了アラーム（0:00）ピピピピッ × 1回
 export const playTimeUpAlarm = () => {
-  const audioContext = new AudioContext()
+  const audioContext = getAudioContext()
   const currentTime = audioContext.currentTime
 
   const beepFrequency = 1200 // 高めの音
@@ -172,8 +191,8 @@ export const playTimeUpAlarm = () => {
   const beepGap = 0.05 // 間隔を短く
   const repeatGap = 0.15 // 3回の繰り返しの間隔
 
-  // 3回繰り返す
-  for (let repeat = 0; repeat < 3; repeat++) {
+  // 1回だけ鳴らす
+  for (let repeat = 0; repeat < 1; repeat++) {
     const repeatStartTime = currentTime + repeat * (4 * (beepDuration + beepGap) + repeatGap)
 
     // ピピピピッという4連続のビープ音
