@@ -54,22 +54,7 @@ function App() {
       shuffleIntervalRef.current = null
     }
     setIsShuffling(false)
-
-    // イカサマ: 最初に書いた人を最後に持ってくる
-    const names = presenterInput
-      .split('\n')
-      .map(name => name.trim())
-      .filter(name => name.length > 0)
-
-    if (names.length > 0) {
-      const firstPerson = names[0]
-      const shuffled = tempShuffledList.filter(name => name !== firstPerson)
-      shuffled.push(firstPerson)
-      setShuffledList(shuffled)
-    } else {
-      setShuffledList(tempShuffledList)
-    }
-
+    setShuffledList(tempShuffledList)
     setCurrentPresenterIndex(0)
     setIsInputCollapsed(true)
     playShuffleComplete()
