@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import './App.css'
 import Timer from './components/Timer'
 import { play1MinAlarm, playTimeUpAlarm, playExplosion, initAudioContext, playShuffleComplete } from './utils/sounds'
@@ -9,6 +9,10 @@ function App() {
   const [presenterInput, setPresenterInput] = useState('')
   const [shuffledList, setShuffledList] = useState<string[]>([])
   const [currentPresenterIndex, setCurrentPresenterIndex] = useState(0)
+  const [isShuffling, setIsShuffling] = useState(false)
+  const [tempShuffledList, setTempShuffledList] = useState<string[]>([])
+  const [isInputCollapsed, setIsInputCollapsed] = useState(false)
+  const shuffleIntervalRef = useRef<number | null>(null)
 
   const handleTimeSelect = (minutes: number) => {
     // タイマー開始時にAudioContextを初期化
@@ -22,7 +26,7 @@ function App() {
     setSelectedTime(null)
   }
 
-  const handleShuffle = () => {
+  const handleStartShuffle = () => {
     const names = presenterInput
       .split('\n')
       .map(name => name.trim())
@@ -34,11 +38,44 @@ function App() {
     }
 
     initAudioContext()
-    const shuffled = [...names].sort(() => Math.random() - 0.5)
-    setShuffledList(shuffled)
+    setIsShuffling(true)
+    setTempShuffledList(names)
+
+    // 高速でシャッフルアニメーション
+    shuffleIntervalRef.current = window.setInterval(() => {
+      const shuffled = [...names].sort(() => Math.random() - 0.5)
+      setTempShuffledList(shuffled)
+    }, 100) // 100msごとにシャッフル
+  }
+
+  const handleStopShuffle = () => {
+    if (shuffleIntervalRef.current) {
+      clearInterval(shuffleIntervalRef.current)
+      shuffleIntervalRef.current = null
+    }
+    setIsShuffling(false)
+    setShuffledList(tempShuffledList)
     setCurrentPresenterIndex(0)
+    setIsInputCollapsed(true)
     playShuffleComplete()
   }
+
+  const handleResetShuffle = () => {
+    if (window.confirm('シャッフル結果をリセットしますか？')) {
+      setShuffledList([])
+      setIsInputCollapsed(false)
+      setCurrentPresenterIndex(0)
+    }
+  }
+
+  // クリーンアップ
+  useEffect(() => {
+    return () => {
+      if (shuffleIntervalRef.current) {
+        clearInterval(shuffleIntervalRef.current)
+      }
+    }
+  }, [])
 
   const handleNextPresenter = () => {
     if (currentPresenterIndex < shuffledList.length - 1) {
@@ -59,36 +96,61 @@ function App() {
           <h1>LT Timer</h1>
 
           <div className="presenter-section">
-            <h3>発表者シャッフル</h3>
-            <textarea
-              className="presenter-input"
-              value={presenterInput}
-              onChange={(e) => setPresenterInput(e.target.value)}
-              placeholder="山田太郎&#10;佐藤花子&#10;鈴木一郎"
-              rows={5}
-            />
-            <button
-              className="shuffle-button"
-              onClick={handleShuffle}
-              disabled={presenterInput.trim().length === 0}
-            >
-              シャッフル
-            </button>
+            {!isInputCollapsed && (
+              <>
+                <h3>発表者シャッフル</h3>
+                <textarea
+                  className="presenter-input"
+                  value={presenterInput}
+                  onChange={(e) => setPresenterInput(e.target.value)}
+                  placeholder="山田太郎&#10;佐藤花子&#10;鈴木一郎"
+                  rows={5}
+                />
+                {!isShuffling ? (
+                  <button
+                    className="shuffle-button"
+                    onClick={handleStartShuffle}
+                    disabled={presenterInput.trim().length === 0}
+                  >
+                    シャッフル
+                  </button>
+                ) : (
+                  <button
+                    className="shuffle-button decide"
+                    onClick={handleStopShuffle}
+                  >
+                    決定
+                  </button>
+                )}
+              </>
+            )}
 
-            {shuffledList.length > 0 && (
+            {(shuffledList.length > 0 || isShuffling) && (
               <div className="shuffle-result">
-                <h4>シャッフル結果</h4>
+                <div className="shuffle-result-header">
+                  <h4>{isShuffling ? 'シャッフル中...' : 'シャッフル結果'}</h4>
+                  {isInputCollapsed && (
+                    <button
+                      className="reset-shuffle-button"
+                      onClick={handleResetShuffle}
+                      title="シャッフルをリセット"
+                    >
+                      ×
+                    </button>
+                  )}
+                </div>
                 <ol className="presenter-list">
-                  {shuffledList.map((name, index) => (
+                  {(isShuffling ? tempShuffledList : shuffledList).map((name, index) => (
                     <li
                       key={index}
-                      className={index === currentPresenterIndex ? 'current' : ''}
+                      className={!isShuffling && index === currentPresenterIndex ? 'current' : ''}
                     >
                       {name}
                     </li>
                   ))}
                 </ol>
-                <div className="presenter-controls">
+                {!isShuffling && (
+                  <div className="presenter-controls">
                   <button
                     className="prev-presenter-button"
                     onClick={handlePrevPresenter}
@@ -107,6 +169,7 @@ function App() {
                     次の人へ →
                   </button>
                 </div>
+                )}
               </div>
             )}
           </div>

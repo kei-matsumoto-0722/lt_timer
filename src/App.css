@@ -22,8 +22,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 40px;
-  padding: 60px;
+  gap: 25px;
+  padding: 40px 50px;
   background: rgba(255, 255, 255, 0.05);
   border-radius: 30px;
   backdrop-filter: blur(10px);
@@ -31,11 +31,14 @@
 }
 
 .time-selector h1 {
-  font-size: 64px;
-  font-weight: bold;
-  color: white;
-  text-shadow: 0 4px 20px rgba(102, 126, 234, 0.5);
-  letter-spacing: 2px;
+  font-size: 28px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  text-shadow: none;
+  letter-spacing: 3px;
+  margin: 0;
+  text-transform: uppercase;
+  font-family: 'Courier New', monospace;
 }
 
 .button-group {
@@ -185,6 +188,25 @@
   cursor: not-allowed;
 }
 
+.shuffle-button.decide {
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  box-shadow: 0 4px 15px rgba(67, 233, 123, 0.4);
+  animation: pulse 1s ease-in-out infinite;
+}
+
+.shuffle-button.decide:hover {
+  box-shadow: 0 6px 20px rgba(67, 233, 123, 0.6);
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
 .shuffle-result {
   width: 100%;
   display: flex;
@@ -193,11 +215,45 @@
   margin-top: 10px;
 }
 
+.shuffle-result-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  position: relative;
+}
+
 .shuffle-result h4 {
   font-size: 18px;
   color: rgba(255, 255, 255, 0.9);
   margin: 0;
   text-align: center;
+}
+
+.reset-shuffle-button {
+  position: absolute;
+  right: 0;
+  padding: 5px 12px;
+  font-size: 24px;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.reset-shuffle-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  transform: rotate(90deg);
 }
 
 .presenter-list {

@@ -4,7 +4,9 @@
       "Bash(mkdir -p src/components)",
       "Bash(npm run dev)",
       "mcp__ide__getDiagnostics",
-      "Bash(npm run build)"
+      "Bash(npm run build)",
+      "Bash(git add -A)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nAdd shuffle animation with start/stop controls and UI improvements\n\n- Implement continuous shuffle animation with start/stop mechanism\n- Add collapsible input section after shuffle completion\n- Add reset button with confirmation dialog for shuffle results\n- Optimize LT Timer logo styling (smaller, monospace font)\n- Reduce overall height with tighter padding and gaps\n- Improve UX with pulsing \"決定\" button during shuffle\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
     ],
     "deny": [],
     "ask": []
