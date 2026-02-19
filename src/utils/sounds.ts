@@ -181,6 +181,35 @@ export const play1MinAlarm = () => {
   })
 }
 
+// シャッフル完了音
+export const playShuffleComplete = () => {
+  const audioContext = getAudioContext()
+  const currentTime = audioContext.currentTime
+
+  const notes = [
+    { time: 0.0, freq: 523.25, duration: 0.1 },   // ド
+    { time: 0.1, freq: 659.25, duration: 0.1 },   // ミ
+    { time: 0.2, freq: 783.99, duration: 0.2 }    // ソ
+  ]
+
+  notes.forEach((note) => {
+    const osc = audioContext.createOscillator()
+    const gain = audioContext.createGain()
+
+    osc.type = 'sine'
+    osc.frequency.setValueAtTime(note.freq, currentTime + note.time)
+
+    gain.gain.setValueAtTime(0.3, currentTime + note.time)
+    gain.gain.exponentialRampToValueAtTime(0.01, currentTime + note.time + note.duration)
+
+    osc.connect(gain)
+    gain.connect(audioContext.destination)
+
+    osc.start(currentTime + note.time)
+    osc.stop(currentTime + note.time + note.duration)
+  })
+}
+
 // 時間終了アラーム（0:00）ピピピピッ × 1回
 export const playTimeUpAlarm = () => {
   const audioContext = getAudioContext()

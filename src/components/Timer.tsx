@@ -8,9 +8,11 @@ interface TimerProps {
   totalMinutes: number
   onComplete: () => void
   onReset: () => void
+  shuffledList: string[]
+  currentPresenterIndex: number
 }
 
-const Timer = ({ totalMinutes, onComplete, onReset }: TimerProps) => {
+const Timer = ({ totalMinutes, onComplete, onReset, shuffledList, currentPresenterIndex }: TimerProps) => {
   const canvasRef = useRef<HTMLDivElement>(null)
   const p5Instance = useRef<p5 | null>(null)
   const [remainingSeconds, setRemainingSeconds] = useState(totalMinutes * 60)
@@ -208,6 +210,14 @@ const Timer = ({ totalMinutes, onComplete, onReset }: TimerProps) => {
         <IoArrowBack />
       </button>
       <div ref={canvasRef} className="canvas-container"></div>
+
+      {shuffledList.length > 0 && (
+        <div className="timer-shuffle-info">
+          <div className="current-presenter">
+            現在: {currentPresenterIndex + 1}人目 - {shuffledList[currentPresenterIndex]}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

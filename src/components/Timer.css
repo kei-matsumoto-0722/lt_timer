@@ -44,3 +44,22 @@
 .reset-button:active {
   transform: scale(1.05);
 }
+
+.timer-shuffle-info {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+}
+
+.current-presenter {
+  padding: 15px 30px;
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+  background: rgba(255, 200, 100, 0.9);
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
